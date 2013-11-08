@@ -1,42 +1,93 @@
+
+
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 200px;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+    var map;
+    
+function mapInit () {
+	var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+	var mapOptions = {
+		  	zoom: 4,
+		    center: myLatlng,
+		    mapTypeId: google.maps.MapTypeId.ROADMAP
+	 };
+	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	
+	var latlng = new Array();
+	latlng[0] = new google.maps.LatLng(-23.363882,131.044922);
+	latlng[1] = new google.maps.LatLng(-26.363882,131.044922);
+	latlng[2] = new google.maps.LatLng(-29.363882,131.044922);
+	
+	var cityArray = new Array();
+	cityArray[0] = "City Name 0";
+	cityArray[1] = "City Name 1";
+	cityArray[2] = "City Name 2";
+	
+	var cityDesc = new Array();
+	cityDesc[0] = "City Desc 0";
+	cityDesc[1] = "City Desc 1";
+	cityDesc[2] = "City Desc 2";
+	
+	for (var i = 0; i < 3; i++) {
+	
+		
+  			var contentString = '<div id="content">'+
+	      	'<div id="siteNotice">'+
+	      	'</div>'+
+	      	'<p><b>'+
+	      	cityArray[i] +
+	      	'</b><p>'+
+	      	cityDesc[i] +
+	      	'<button onclick="dataRefresh('+i+')">Refresh</button>' +
+	      	'</div>'+
+	      	'</div>';
+		
+		var infowindow = new google.maps.InfoWindow({
+	      content: contentString
+	  	});
+	
+		var marker = new google.maps.Marker({
+			position: latlng[i],
+	      	map: map,
+	      	title: 'Uluru (Ayers Rock)'
+	  	});
+	  	google.maps.event.addListener(marker, 'click', function(marker, infowindow) { return function() {
+          infowindow.open(map, marker);
+        }}(marker, infowindow));
+	  }
+	
+
+}
+
+
+function dataRefresh (num) {
+	alert('Refresh data' + num);
+}
+
+function initialize() {
+	mapInit();
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
 </html>
+

@@ -19,8 +19,10 @@
 
 package com.amadeus.travelnow;
 
+import org.apache.cordova.DroidGap;
+
+import android.content.res.Configuration;
 import android.os.Bundle;
-import org.apache.cordova.*;
 
 public class TravelNow extends DroidGap
 {
@@ -29,8 +31,16 @@ public class TravelNow extends DroidGap
     {
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
-        super.loadUrl(Config.getStartUrl());
-        //super.loadUrl("file:///android_asset/www/index.html")
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+        	 super.setIntegerProperty("splashscreen", R.drawable.splash1);
+             super.loadUrl("file:///android_asset/www/index.html", 10000);
+        }
+        else // ORIENTATION_PORTRAIT and ORIENTATION_UNDEFINED
+        {
+        	 super.setIntegerProperty("splashscreen", R.drawable.splash);
+             super.loadUrl("file:///android_asset/www/index.html", 10000);
+        }
     }
 }
 

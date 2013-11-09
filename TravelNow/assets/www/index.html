@@ -1,93 +1,89 @@
-
-
 <!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 <html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
-      html, body, #map-canvas {
-        height: 200px;
-        margin: 0px;
-        padding: 0px
-      }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <script>
-    var map;
-    
-function mapInit () {
-	var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
-	var mapOptions = {
-		  	zoom: 4,
-		    center: myLatlng,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
-	 };
-	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-	
-	var latlng = new Array();
-	latlng[0] = new google.maps.LatLng(-23.363882,131.044922);
-	latlng[1] = new google.maps.LatLng(-26.363882,131.044922);
-	latlng[2] = new google.maps.LatLng(-29.363882,131.044922);
-	
-	var cityArray = new Array();
-	cityArray[0] = "City Name 0";
-	cityArray[1] = "City Name 1";
-	cityArray[2] = "City Name 2";
-	
-	var cityDesc = new Array();
-	cityDesc[0] = "City Desc 0";
-	cityDesc[1] = "City Desc 1";
-	cityDesc[2] = "City Desc 2";
-	
-	for (var i = 0; i < 3; i++) {
-	
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 		
-  			var contentString = '<div id="content">'+
-	      	'<div id="siteNotice">'+
-	      	'</div>'+
-	      	'<p><b>'+
-	      	cityArray[i] +
-	      	'</b><p>'+
-	      	cityDesc[i] +
-	      	'<button onclick="dataRefresh('+i+')">Refresh</button>' +
-	      	'</div>'+
-	      	'</div>';
+		<link rel="stylesheet" type="text/css" href="css/thack.css" />
 		
-		var infowindow = new google.maps.InfoWindow({
-	      content: contentString
-	  	});
-	
-		var marker = new google.maps.Marker({
-			position: latlng[i],
-	      	map: map,
-	      	title: 'Uluru (Ayers Rock)'
-	  	});
-	  	google.maps.event.addListener(marker, 'click', function(marker, infowindow) { return function() {
-          infowindow.open(map, marker);
-        }}(marker, infowindow));
-	  }
-	
+        <script type="text/javascript" src="scripts/aria/ariatemplates-1.4.12.js"></script>
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/iscroll.js"></script>
+		
+		<script src="js/modernizr.custom.17475.js"></script>
 
-}
+        <title>Travel Now</title>
+		
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
+		<!-- cordova -->
+		<script src="cordova.js"></script>
+	    <!-- cordova facebook plugin -->
+		<script src="js/cdv-plugin-fb-connect.js"></script>
+	    <!-- facebook js sdk -->
+		<script src="js/facebook-js-sdk.js"></script>
+				
+    </head>
+    <body>
+		
+		<div id="layout"></div>
 
-function dataRefresh (num) {
-	alert('Refresh data' + num);
-}
+		<div id="fb-root"></div>
 
-function initialize() {
-	mapInit();
+		<br></br>
+		
+		<script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+		
+        <script type="text/javascript">
 
-}
+			app.initialize();
 
-google.maps.event.addDomListener(window, 'load', initialize);
+			aria.core.AppEnvironment.setEnvironment({
+													defaultWidgetLibs : {
+													"aria" : "aria.widgets.AriaLib",
+													"embed" : "aria.embed.EmbedLib"
+													}
+													});
+										
+			var pageEngine;
+			
+			Aria.load({
+					  classes: ["aria.pageEngine.PageEngine", "aria.pageEngine.pageProviders.BasePageProvider"],
+					  oncomplete: function() {
+					  pageEngine = new aria.pageEngine.PageEngine();
+					  pageEngine.start({
+									   pageProvider : new aria.pageEngine.pageProviders.BasePageProvider({
+																										 siteConfigLocation : "app/site.json",
+																										 pageBaseLocation : "app/pages/",
+																										 homePageId : "HOME"
+																										 })
+									   });
+					  }
+					  });
 
-    </script>
-  </head>
-  <body>
-    <div id="map-canvas"></div>
-  </body>
+        </script>
+		
+		<div id="log"></div>
+
+    </body>
 </html>
-

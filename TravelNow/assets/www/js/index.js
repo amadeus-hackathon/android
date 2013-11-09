@@ -37,24 +37,81 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+		
+//		navigator.splashscreen.show();
+//		
+//		setTimeout(function() {
+//				   navigator.splashscreen.hide();
+//				   }, 5000);
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+		try
+		{
+			FB.init({ appId: "750340128315217", nativeInterface: CDV.FB, useCachedDialogs: false });
+		}
+		catch (e)
+		{
+			alert(e.message);
+		}
+		
+		navigator.geolocation.getCurrentPosition(app.onGeoLocationSuccess, app.onGeoLocationError);
 
-        console.log('Received Event: ' + id);
+			
     },
-    mapinitialize : function () {
-    	var mapOptions = {
-    		    zoom: 8,
-    		    center: new google.maps.LatLng(-34.397, 150.644),
-    		    mapTypeId: google.maps.MapTypeId.ROADMAP
-    		  };
-    		  map = new google.maps.Map(document.getElementById('map-canvas'),
-    		      mapOptions);
+	onGeoLocationSuccess: function(position){
+//		alert('Latitude: '          + position.coords.latitude          + '\n' +
+//			  'Longitude: '         + position.coords.longitude         + '\n' +
+//			  'Altitude: '          + position.coords.altitude          + '\n' +
+//			  'Accuracy: '          + position.coords.accuracy          + '\n' +
+//			  'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+//			  'Heading: '           + position.coords.heading           + '\n' +
+//			  'Speed: '             + position.coords.speed             + '\n' +
+//			  'Timestamp: '         + position.timestamp                + '\n');
+		
+		window.localStorage.setItem("gpsLat", position.coords.latitude);
+		window.localStorage.setItem("gpsLng", position.coords.longitude);
+		
+		app.codeLatLng();
+		
+	},
+	onGeoLocationError: function(error){
+		alert('code: '    + error.code    + '\n' +
+			  'message: ' + error.message + '\n');
+	},
+	codeLatLng: function() {
+		
+		var geocoder;
+		geocoder = new google.maps.Geocoder();
 
-    }
-    }
+		var gpsLat = window.localStorage.getItem("gpsLat");
+		var gpsLng = window.localStorage.getItem("gpsLng");
+		
+		var latlng = new google.maps.LatLng(gpsLat, gpsLng);
+
+		geocoder.geocode({'latLng': latlng}, function(results, status)
+						 {
+						 if (status == google.maps.GeocoderStatus.OK)
+						 {
+						 if (results[1])
+						 {
+                         var locationLength = results[1].address_components.length;
+						 
+                         for(var j = 0; j < locationLength; j++)
+                         {
+                         if(results[1].address_components[j].types[0] == "locality")
+                         {
+                         window.localStorage.setItem("currentCityName", results[1].address_components[j].long_name);
+                         }
+                         }
+						 }
+						 else
+						 {
+						 alert('No results found');
+						 }
+						 }
+						 else
+						 {
+						 alert('Geocoder failed due to: ' + status);
+						 }
+						 });
+	}
 };
